@@ -331,10 +331,6 @@ document.addEventListener('DOMContentLoaded', () => {
             tableItem.innerHTML = '<i class="fas fa-hashtag"></i> 設定桌號: <span id="result-table">' + (formData.table || 'N/A') + '</span>';
         }
         
-        // 隨機生成爆分率，範圍在70-97%之間
-        const explosionRate = getRandomInt(70, 97);
-        document.getElementById('result-data-range').textContent = `${explosionRate}%`;
-
         // 可能的結果訊息列表
         const resultMessages = [
             "很抱歉... 此房計算不出參考值建議換房",
@@ -361,31 +357,33 @@ document.addEventListener('DOMContentLoaded', () => {
             "資料讀取失敗... 請在重試"
         ];
 
-        // 隨機選擇一條訊息
-        const randomMessageIndex = Math.floor(Math.random() * resultMessages.length);
-        const selectedMessage = resultMessages[randomMessageIndex];
-
-        // 添加訊息到結果頁面
-        const messageElement = document.createElement('div');
-        messageElement.className = 'result-item';
-        messageElement.innerHTML = `<i class="fas fa-comment"></i> 分析結果: <span class="message">${selectedMessage}</span>`;
-        
-        // 找到解除空轉元素的位置
-        const disableRotationItem = document.querySelector('.result-item:has(.success)');
-        
-        // 判斷是否為失敗訊息
-        const isFailureMessage = failureMessages.includes(selectedMessage);
-        
-        // 修改解除空轉的顯示
-        if (isFailureMessage) {
-            disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="failure" style="color: red;">失敗</span>';
-        } else {
-            disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="success">完成</span>';
-        }
-        
-        // 在爆分率前插入訊息
+        // 爆分率元素
         const dataRangeItem = document.querySelector('.result-item:has(#result-data-range)');
-        dataRangeItem.parentNode.insertBefore(messageElement, dataRangeItem);
+        const resultDataRange = document.getElementById('result-data-range');
+        
+        // 判斷是否顯示爆分率還是訊息 (50/50機率)
+        if (Math.random() < 0.5) {
+            // 顯示爆分率 (70-97%)
+            const explosionRate = getRandomInt(70, 97);
+            resultDataRange.textContent = `${explosionRate}%`;
+            dataRangeItem.innerHTML = '<i class="fas fa-database"></i> 爆分率: <span id="result-data-range" class="highlight">' + `${explosionRate}%` + '</span>';
+        } else {
+            // 顯示隨機訊息替代爆分率
+            const randomMessageIndex = Math.floor(Math.random() * resultMessages.length);
+            const selectedMessage = resultMessages[randomMessageIndex];
+            dataRangeItem.innerHTML = '<i class="fas fa-database"></i> <span id="result-data-range" class="highlight">' + selectedMessage + '</span>';
+            
+            // 判斷是否為失敗訊息
+            const isFailureMessage = failureMessages.includes(selectedMessage);
+            
+            // 修改解除空轉的顯示
+            const disableRotationItem = document.querySelector('.result-item:has(.success)');
+            if (isFailureMessage) {
+                disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="failure" style="color: red;">失敗</span>';
+            } else {
+                disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="success">完成</span>';
+            }
+        }
 
         // Display rounds based on collected data
         const resultRoundsElement = document.getElementById('result-rounds');
