@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 分析系統</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 序號輸入畫面 -->
+        <div id="serial-screen" class="screen active">
+            <div class="panel">
+                <h1><i class="fas fa-shield-alt"></i> 系統接入</h1>
+                <p>請輸入序號以繼續...</p>
+                <div class="input-group">
+                    <label for="serial-input"><i class="fas fa-key"></i> 序號:</label>
+                    <input type="text" id="serial-input" placeholder="輸入您的序號">
+                </div>
+                <button id="submit-serial">驗證接入</button>
+                <p id="serial-error" class="error-message"></p>
+            </div>
+        </div>
+
+        <!-- 主表單畫面 -->
+        <div id="main-screen" class="screen">
+            <div class="panel">
+                <h1><i class="fas fa-cogs"></i> RK星河娛樂分析</h1>
+                <div class="input-group">
+                    <label for="device"><i class="fas fa-mobile-alt"></i> 裝置:</label>
+                    <select id="device">
+                        <option value="IOS">iOS</option>
+                        <option value="Android">Android</option>
+                        <option value="PC">PC</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="platform"><i class="fas fa-server"></i> 平台選擇:</label>
+                    <select id="platform">
+                        <option value="RK">RK星河娛樂城</option>
+                        <!-- 其他平台可於此處添加 -->
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="amount"><i class="fas fa-dollar-sign"></i> 設定金額:</label>
+                    <input type="number" id="amount" placeholder="輸入金額">
+                </div>
+                <div class="input-group">
+                    <label for="game"><i class="fas fa-gamepad"></i> 遊戲選項:</label>
+                    <select id="game">
+                        <option value="Zeus">戰神賽特</option>
+                        <option value="Wukong">孫行者</option>
+                        <option value="Wuxia">武俠</option>
+                        <option value="RedThreeKingdoms">赤三國</option>
+                        <option value="Thor">雷神之槌</option>
+                        <!-- 其他遊戲可於此處添加 -->
+                    </select>
+                </div>
+                <div class="input-group" id="rounds-input-group">
+                    <label for="rounds"><i class="fas fa-sync-alt"></i> 未開轉數:</label>
+                    <div id="rounds-inputs-container">
+                        <input type="number" id="rounds" placeholder="輸入未開轉數 1">
+                        <input type="number" id="rounds-2" placeholder="輸入未開轉數 2" style="display: none; margin-top: 5px;">
+                        <input type="number" id="rounds-3" placeholder="輸入未開轉數 3" style="display: none; margin-top: 5px;">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="table" id="table-label"><i class="fas fa-hashtag"></i> 輸入桌號:</label>
+                    <input type="text" id="table" placeholder="輸入桌號">
+                </div>
+                <button id="submit-analysis">開始分析</button>
+            </div>
+        </div>
+
+        <!-- 載入中畫面 -->
+        <div id="loading-screen" class="screen">
+            <div class="panel loading-panel">
+                <h1><i class="fas fa-spinner fa-spin"></i> 系統分析中...</h1>
+                <pre id="glitch-text"></pre>
+                <div class="progress-bar">
+                    <div class="progress" id="progress-bar-inner"></div>
+                </div>
+                <p id="loading-status">帳號加載中..</p>
+            </div>
+        </div>
+
+        <!-- 結果畫面 -->
+        <div id="result-screen" class="screen">
+            <div class="panel">
+                <h1><i class="fas fa-chart-line"></i> AI 分析結果</h1>
+                <div class="result-item"><strong><i class="fas fa-laptop-code"></i> 運行中</strong></div>
+                <div class="result-item"><i class="fas fa-mobile-alt"></i> 設定裝置: <span id="result-device"></span></div>
+                <div class="result-item"><i class="fas fa-server"></i> 設定平台: <span id="result-platform"></span></div>
+                <div class="result-item"><i class="fas fa-dollar-sign"></i> 設定金額: <span id="result-amount"></span></div>
+                <div class="result-item"><i class="fas fa-gamepad"></i> 設定遊戲: <span id="result-game"></span></div>
+                <div class="result-item"><i class="fas fa-sync-alt"></i> 未開轉數: <span id="result-rounds"></span></div>
+                <div class="result-item"><i class="fas fa-hashtag"></i> 設定桌號: <span id="result-table"></span></div>
+                <div class="result-item"><i class="fas fa-check-circle"></i> 解除空轉: <span class="success">完成</span></div>
+                <div class="result-item"><i class="fas fa-database"></i> 爆分率: <span id="result-data-range" class="highlight"></span></div>
+                <div class="purchase-section">
+                    <h3>建議購買免遊訊號</h3>
+                    <div id="purchase-icon-1">
+                        <img src="img/icon1.png" alt="Icon 1" class="result-icon" id="result-icon1-img"> x<span id="result-icon1-count"></span>
+                    </div>
+                     <div id="purchase-icon-2">
+                        <img src="img/icon2.png" alt="Icon 2" class="result-icon" id="result-icon2-img"> x<span id="result-icon2-count"></span>
+                    </div>
+                    <div id="purchase-icon-3" style="display: none;"> <!-- Initially hidden -->
+                        <img src="" alt="Icon 3" class="result-icon" id="result-icon3-img"> x<span id="result-icon3-count"></span>
+                    </div>
+                </div>
+                 <button id="back-to-main">返回</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Font Awesome for Icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html> 
