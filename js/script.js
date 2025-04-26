@@ -342,24 +342,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Show Result Screen ---
     function showResultScreen(formData) {
-        document.getElementById('result-device').textContent = formData.device;
-        document.getElementById('result-platform').textContent = formData.platform;
-        
-        // 更新金額顯示為得分率
-        const amountElement = document.getElementById('result-amount');
-        const amountItem = amountElement.closest('.result-item');
-        
-        // 如果是雷神之槌，隱藏得分率項目
-        if (formData.gameValue === 'Thor') {
-            amountItem.style.display = 'none';
-        } else {
-            // 顯示得分率項目
-            amountItem.style.display = 'block';
-            amountItem.innerHTML = '<i class="fas fa-chart-bar"></i> 得分率: <span id="result-amount">今日 ' + 
-                (formData.scoreTodayValue || 'N/A') + ' / 30日 ' + (formData.scoreMonthValue || 'N/A') + '</span>';
+        try {
+            // 安全獲取元素，並處理可能的null值
+            const deviceElement = document.getElementById('result-device');
+            if (deviceElement) deviceElement.textContent = formData.device || 'N/A';
+            
+            const platformElement = document.getElementById('result-platform');
+            if (platformElement) platformElement.textContent = formData.platform || 'N/A';
+
+            // 更新金額顯示為得分率
+            const amountElement = document.getElementById('result-amount');
+            if (amountElement) {
+                const amountItem = amountElement.closest('.result-item');
+                
+                if (amountItem) {
+                    // 如果是雷神之槌，隱藏得分率項目
+                    if (formData.gameValue === 'Thor') {
+                        amountItem.style.display = 'none';
+                    } else {
+                        // 顯示得分率項目
+                        amountItem.style.display = 'block';
+                        amountItem.innerHTML = '<i class="fas fa-chart-bar"></i> 得分率: <span id="result-amount">今日 ' + 
+                            (formData.scoreTodayValue || 'N/A') + ' / 30日 ' + (formData.scoreMonthValue || 'N/A') + '</span>';
+                    }
+                }
+            }
+            
+            const gameElement = document.getElementById('result-game');
+            if (gameElement) gameElement.textContent = formData.game || 'N/A';
+        } catch (error) {
+            console.error('在設置得分率信息時出錯:', error);
         }
-        
-        document.getElementById('result-game').textContent = formData.game;
         
         // 設定桌號/遊戲編碼顯示
         const resultTableElement = document.getElementById('result-table');
@@ -419,8 +432,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 首先找到相關元素
         const dataRangeElement = document.getElementById('result-data-range');
+        if (!dataRangeElement) {
+            console.error('找不到 result-data-range 元素');
+            showScreen('result'); // 嘗試顯示結果頁面，即使有錯誤
+            return; // 提前返回，避免後續錯誤
+        }
+        
         const dataRangeParent = dataRangeElement.parentElement;
-        const disableRotationItem = document.querySelector('.result-item:has(.success)');
+        
+        // 改為更安全的選擇器 - :has() 選擇器可能不被所有瀏覽器支持
+        let disableRotationItem = document.querySelector('.result-item:has(.success)');
+        if (!disableRotationItem) {
+            // 備用選擇器
+            disableRotationItem = document.querySelector('.result-item');
+            console.warn('無法找到帶有 .success 的元素，使用備用選擇器');
+        }
         
         // 決定顯示爆分率還是訊息
         if (Math.random() < 0.2) {
@@ -448,10 +474,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const shouldHideIcons = hideIconsMessages.includes(selectedMessage);
             
             // 修改解除空轉的顯示
-            if (isFailureMessage) {
-                disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="failure" style="color: red;">失敗</span>';
-            } else {
-                disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="success">完成</span>';
+            try {
+                if (disableRotationItem) {
+                    if (isFailureMessage) {
+                        disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="failure" style="color: red;">失敗</span>';
+                    } else {
+                        disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="success">完成</span>';
+                    }
+                }
+            } catch (error) {
+                console.error('在設置解除空轉信息時出錯:', error);
             }
             
             // 根據訊息控制購買建議圖標區域的顯示/隱藏
