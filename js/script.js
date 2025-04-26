@@ -217,11 +217,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 獲取所有表單數據
         const formData = {
-            gameValue: document.getElementById('game').value,
-            roomValue: document.getElementById('room').value,
+            device: document.getElementById('device').value,
+            platform: document.getElementById('platform').selectedOptions[0].text,
             scoreTodayValue: document.getElementById('score-today').value,
             scoreMonthValue: document.getElementById('score-month').value,
-            continuousValue: document.getElementById('continuous').value
+            game: document.getElementById('game').selectedOptions[0].text, // 遊戲名稱文本
+            gameValue: selectedGameValue, // 遊戲值用於邏輯判斷
+            rounds: roundsValue, // 已經處理好的轉數值
+            table: document.getElementById('table').value
         };
 
         // Basic validation
@@ -229,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let missingFields = [];
         if (!formData.scoreTodayValue) missingFields.push("今日得分率");
         if (!formData.scoreMonthValue) missingFields.push("30日得分率");
-        if (!formData.roomValue) missingFields.push("桌號");
+        if (!formData.table) missingFields.push("桌號");
 
         // Only validate rounds if the input group is visible
         if (roundsInputGroup.style.display !== 'none') {
@@ -316,7 +319,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function showResultScreen(formData) {
         document.getElementById('result-device').textContent = formData.device;
         document.getElementById('result-platform').textContent = formData.platform;
-        document.getElementById('result-amount').textContent = formData.amount ? parseInt(formData.amount).toLocaleString() : 'N/A';
+        
+        // 更新金額顯示為得分率
+        const amountElement = document.getElementById('result-amount');
+        const amountItem = amountElement.closest('.result-item');
+        amountItem.innerHTML = '<i class="fas fa-chart-bar"></i> 得分率: <span id="result-amount">今日 ' + 
+            (formData.scoreTodayValue || 'N/A') + ' / 30日 ' + (formData.scoreMonthValue || 'N/A') + '</span>';
+        
         document.getElementById('result-game').textContent = formData.game;
         
         // 設定桌號/遊戲編碼顯示
@@ -479,16 +488,33 @@ document.addEventListener('DOMContentLoaded', () => {
             showThirdIcon = true;
         } else {
             // Default / Other Games: Show 2 default icons
-            iconsToDisplay = 2;
-            iconElements[0].div.style.display = 'inline-block';
-            iconElements[0].img.src = `img/${defaultIcon1}`;
-            iconElements[0].img.alt = 'Default Icon 1';
-            iconElements[0].count.textContent = getRandomInt(1, 5);
+            try {
+                iconsToDisplay = 2;
+                // 檢查圖片是否存在
+                iconElements[0].div.style.display = 'inline-block';
+                iconElements[0].img.src = `img/${defaultIcon1}`;
+                iconElements[0].img.alt = 'Default Icon 1';
+                iconElements[0].count.textContent = getRandomInt(1, 5);
+                
+                // 添加錯誤處理
+                iconElements[0].img.onerror = function() {
+                    console.warn(`圖片不存在: img/${defaultIcon1}`);
+                    this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwIiB5PSI1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBhbGlnbm1lbnQtYmFzZWxpbmU9Im1pZGRsZSIgZmlsbD0iIzk5OSI+圖片缺失</dGV4dD48L3N2Zz4=';
+                };
 
-            iconElements[1].div.style.display = 'inline-block';
-            iconElements[1].img.src = `img/${defaultIcon2}`;
-            iconElements[1].img.alt = 'Default Icon 2';
-            iconElements[1].count.textContent = getRandomInt(3, 8);
+                iconElements[1].div.style.display = 'inline-block';
+                iconElements[1].img.src = `img/${defaultIcon2}`;
+                iconElements[1].img.alt = 'Default Icon 2';
+                iconElements[1].count.textContent = getRandomInt(3, 8);
+                
+                // 添加錯誤處理
+                iconElements[1].img.onerror = function() {
+                    console.warn(`圖片不存在: img/${defaultIcon2}`);
+                    this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwIiB5PSI1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBhbGlnbm1lbnQtYmFzZWxpbmU9Im1pZGRsZSIgZmlsbD0iIzk5OSI+圖片缺失</dGV4dD48L3N2Zz4=';
+                };
+            } catch (error) {
+                console.error('顯示默認圖標時出錯:', error);
+            }
         }
 
         // Select Unique Icons for Zeus/Thor
@@ -541,8 +567,9 @@ document.addEventListener('DOMContentLoaded', () => {
      // --- Back to Main Screen ---
      backToMainButton.addEventListener('click', () => {
         showScreen('main');
-         // Optionally reset the form fields
-         document.getElementById('amount').value = '';
+         // 重置表單字段
+         document.getElementById('score-today').value = '';
+         document.getElementById('score-month').value = '';
          document.getElementById('rounds').value = '';
          document.getElementById('table').value = '';
      });
