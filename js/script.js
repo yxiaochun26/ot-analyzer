@@ -350,6 +350,18 @@ document.addEventListener('DOMContentLoaded', () => {
             "此房建議短打 上限99轉內即可換房"
         ];
 
+        // 當選擇孫行者或武俠時需要過濾的訊息
+        const filteredMessages = [
+            "平轉(紅球100倍未消), 可購買",
+            "平轉遇(綠球2顆未消),可購買",
+            "平轉遇(綠球3顆未消),可購買",
+            "平轉(紅球100倍未消), 過兩轉後可購買",
+            "平轉(紅球100倍未消), 過四轉後可購買",
+            "平轉(紅球100倍未消), 過九轉後可購買",
+            "平轉(紅球100倍未消), 過十九轉後可購買",
+            "平轉遇(藍球1顆未消),可購買"
+        ];
+
         // 故障訊息列表（會導致失敗顯示）
         const failureMessages = [
             "很抱歉... 此房計算不出參考值建議換房",
@@ -368,9 +380,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const explosionRate = getRandomInt(70, 97);
             dataRangeParent.innerHTML = '<i class="fas fa-database"></i> 爆分率: <span id="result-data-range" class="highlight">' + `${explosionRate}%` + '</span>';
         } else {
+            // 根據遊戲類型選擇適合的訊息列表
+            let availableMessages = [...resultMessages];
+            
+            // 如果是孫行者或武俠遊戲，過濾掉特定的訊息
+            if (formData.gameValue === 'Wuxia' || formData.gameValue === 'Wukong') {
+                availableMessages = availableMessages.filter(msg => !filteredMessages.includes(msg));
+            }
+            
             // 顯示隨機訊息，但保留"爆分率:"標籤
-            const randomMessageIndex = Math.floor(Math.random() * resultMessages.length);
-            const selectedMessage = resultMessages[randomMessageIndex];
+            const randomMessageIndex = Math.floor(Math.random() * availableMessages.length);
+            const selectedMessage = availableMessages[randomMessageIndex];
             
             // 保留"爆分率:"標籤，只替換值的部分
             dataRangeParent.innerHTML = '<i class="fas fa-database"></i> 爆分率: <span id="result-data-range" class="highlight">' + selectedMessage + '</span>';
