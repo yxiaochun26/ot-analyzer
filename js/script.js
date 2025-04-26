@@ -77,6 +77,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const wuxiaQuantityRules = {
         'symbol_14.png': { min: 1, max: 3 }
     };
+
+    // 孫行者 Icons
+    const wukongGameIcons = [
+        '10.png',
+        '11.png',
+        '12.png',
+        '13.png',
+        '14.png', // 特殊數量規則 1-2
+        '15.png', // 特殊數量規則 1-3
+        '16.png',
+        '17.png',
+        '18.png'
+    ];
+    const wukongQuantityRules = {
+        '14.png': { min: 1, max: 2 },
+        '15.png': { min: 1, max: 3 }
+    };
     
     // 赤三國 Icons
     const redThreeKingdomsGameIcons = [
@@ -611,6 +628,13 @@ document.addEventListener('DOMContentLoaded', () => {
             defaultMinQuantity = 3;
             defaultMaxQuantity = 7;
             showThirdIcon = true;
+        } else if (formData.gameValue === 'Wukong') {
+            iconsToDisplay = 2; // 孫行者只顯示2個圖標
+            sourceIconList = wukongGameIcons;
+            specificQuantityRules = wukongQuantityRules;
+            defaultMinQuantity = 2; // 一般圖標數量最小值為2
+            defaultMaxQuantity = 5; // 一般圖標數量最大值為5
+            showThirdIcon = false; // 不顯示第三個圖標
         } else if (formData.gameValue === 'Wuxia') {
             iconsToDisplay = 3;
             sourceIconList = wuxiaGameIcons;
@@ -656,8 +680,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Select Unique Icons for Zeus/Thor
-        if ((formData.gameValue === 'Zeus' || formData.gameValue === 'Thor' || formData.gameValue === 'Wuxia' || formData.gameValue === 'RedThreeKingdoms') && sourceIconList.length > 0) {
+        // Select Unique Icons for Zeus/Thor/Wukong/Wuxia/RedThreeKingdoms
+        if ((formData.gameValue === 'Zeus' || formData.gameValue === 'Thor' || formData.gameValue === 'Wukong' || formData.gameValue === 'Wuxia' || formData.gameValue === 'RedThreeKingdoms') && sourceIconList.length > 0) {
             const selectedUniqueIcons = [];
             const listCopy = [...sourceIconList]; // Work on a copy
 
@@ -667,7 +691,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 for (let i = 0; i < iconsToDisplay; i++) {
                     const randomIndex = Math.floor(Math.random() * sourceIconList.length); // Select from original list
                     selectedUniqueIcons.push(sourceIconList[randomIndex]);
-                 }
+                }
             } else {
                 // Select unique icons
                 for (let i = 0; i < iconsToDisplay; i++) {
@@ -680,7 +704,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Assign unique icons and quantities
             for (let i = 0; i < selectedUniqueIcons.length; i++) {
-                 if (i >= iconElements.length) break; // Safety check
+                if (i >= iconElements.length) break; // Safety check
 
                 const iconData = iconElements[i];
                 const filename = selectedUniqueIcons[i];
@@ -703,15 +727,15 @@ document.addEventListener('DOMContentLoaded', () => {
         showScreen('result');
     }
 
-     // --- Back to Main Screen ---
-     backToMainButton.addEventListener('click', () => {
+    // --- Back to Main Screen ---
+    backToMainButton.addEventListener('click', () => {
         showScreen('main');
-         // 重置表單字段
-         document.getElementById('score-today').value = '';
-         document.getElementById('score-month').value = '';
-         document.getElementById('rounds').value = '';
-         document.getElementById('table').value = '';
-     });
+        // 重置表單字段
+        document.getElementById('score-today').value = '';
+        document.getElementById('score-month').value = '';
+        document.getElementById('rounds').value = '';
+        document.getElementById('table').value = '';
+    });
 
     // --- Event Listener for Game Selection (needs to be after function definition) ---
     gameSelect.addEventListener('change', updateRoundsInputsVisibility);
@@ -719,4 +743,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Initial Setup ---
     updateRoundsInputsVisibility(); // Call on load to set initial state
     showScreen('serial'); // Show the serial screen first
-}); 
+});
