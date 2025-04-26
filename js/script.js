@@ -362,24 +362,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const dataRangeParent = dataRangeElement.parentElement;
         const disableRotationItem = document.querySelector('.result-item:has(.success)');
         
-        // 強制測試模式：顯示訊息 (將此設為true可以測試訊息顯示)
-        const forceShowMessage = true;
-
-        // 決定顯示爆分率還是訊息 (20% 機率顯示爆分率，80% 機率顯示訊息)
-        if (!forceShowMessage && Math.random() < 0.2) {
+        // 決定顯示爆分率還是訊息
+        if (Math.random() < 0.2) {
             // 顯示爆分率 (70-97%)
             const explosionRate = getRandomInt(70, 97);
             dataRangeParent.innerHTML = '<i class="fas fa-database"></i> 爆分率: <span id="result-data-range" class="highlight">' + `${explosionRate}%` + '</span>';
-            
-            // 確保解除空轉顯示為"完成"
-            disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="success">完成</span>';
         } else {
-            // 顯示隨機訊息替代爆分率
+            // 顯示隨機訊息，但保留"爆分率:"標籤
             const randomMessageIndex = Math.floor(Math.random() * resultMessages.length);
             const selectedMessage = resultMessages[randomMessageIndex];
             
-            // 直接替換整個元素內容，確保ID和樣式正確
-            dataRangeParent.innerHTML = '<i class="fas fa-database"></i> <span id="result-data-range" class="highlight">' + selectedMessage + '</span>';
+            // 保留"爆分率:"標籤，只替換值的部分
+            dataRangeParent.innerHTML = '<i class="fas fa-database"></i> 爆分率: <span id="result-data-range" class="highlight">' + selectedMessage + '</span>';
             
             // 判斷是否為失敗訊息
             const isFailureMessage = failureMessages.includes(selectedMessage);
