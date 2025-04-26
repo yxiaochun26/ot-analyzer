@@ -401,8 +401,20 @@ document.addEventListener('DOMContentLoaded', () => {
             // 修改解除空轉的顯示
             if (isFailureMessage) {
                 disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="failure" style="color: red;">失敗</span>';
+                
+                // 當出現故障訊息時，隱藏購買建議圖標區域
+                const purchaseIconsSection = document.querySelector('.purchase-section');
+                if (purchaseIconsSection) {
+                    purchaseIconsSection.style.display = 'none';
+                }
             } else {
                 disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="success">完成</span>';
+                
+                // 確保購買建議圖標區域顯示（可能在之前被隱藏）
+                const purchaseIconsSection = document.querySelector('.purchase-section');
+                if (purchaseIconsSection) {
+                    purchaseIconsSection.style.display = 'block';
+                }
             }
         }
         
