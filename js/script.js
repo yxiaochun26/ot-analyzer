@@ -479,6 +479,25 @@ document.addEventListener('DOMContentLoaded', () => {
             // 顯示爆分率 (70-97%)
             const explosionRate = getRandomInt(70, 97);
             dataRangeParent.innerHTML = '<i class="fas fa-database"></i> 爆分率: <span id="result-data-range" class="highlight">' + `${explosionRate}%` + '</span>';
+            
+            // 確保在顯示百分比時也處理圖標顯示
+            // 對於百分比顯示，我們總是顯示圖標，除非是特定遊戲有特殊處理
+            const purchaseIconsSection = document.querySelector('.purchase-section');
+            if (purchaseIconsSection) {
+                // 即使是雷神之槌，在顯示百分比時也顯示免游訊號圖標
+                purchaseIconsSection.style.display = 'block';
+                console.log('顯示百分比時設置圖標可見 (遊戲類型:', formData.gameValue, ')');
+            }
+            
+            // 確保解除空轉顯示為"完成"
+            try {
+                if (disableRotationItem) {
+                    disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="success">完成</span>';
+                    console.log('百分比顯示時設置解除空轉為完成');
+                }
+            } catch (error) {
+                console.error('在設置解除空轉信息時出錯:', error);
+            }
         } else {
             // 根據遊戲類型選擇適合的訊息列表
             let availableMessages = [...resultMessages];
