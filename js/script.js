@@ -107,24 +107,44 @@ document.addEventListener('DOMContentLoaded', () => {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    // --- Function to Update Rounds Inputs Visibility ---
+    // --- Function to Update Inputs Visibility Based on Game Selection ---
     function updateRoundsInputsVisibility() {
         const selectedGameValue = gameSelect.value; // Get 'Zeus', 'Thor', 'Wukong' etc.
-
+        
+        // 取得得分率輸入區域
+        const scoreRateGroup = document.querySelector('.input-group:has([id^="score-"])');
+        
+        // 更新轉數輸入區域顯示
         if (selectedGameValue === 'Thor') {
-            roundsInputGroup.style.display = 'none'; // Hide the whole group
+            roundsInputGroup.style.display = 'none'; // 隱藏轉數組
+            
+            // 同時隱藏得分率輸入框
+            if (scoreRateGroup) {
+                scoreRateGroup.style.display = 'none';
+            }
         } else {
-            // For all other games, show only one input field
-            roundsInputGroup.style.display = 'block'; // Show the group
-            roundsInput1.style.display = 'block';     // Show the one input
+            // 非雷神之槌時，顯示轉數輸入框和得分率
+            roundsInputGroup.style.display = 'block'; // 顯示轉數組
+            roundsInput1.style.display = 'block';     // 顯示單一輸入框
+            
+            // 同時顯示得分率輸入框
+            if (scoreRateGroup) {
+                scoreRateGroup.style.display = 'block';
+            }
         }
          
-        // Clear inputs when hiding
+        // 隱藏時清空輸入內容
         if (selectedGameValue === 'Thor') {
             roundsInput1.value = '';
+            
+            // 清空得分率輸入
+            const todayScoreInput = document.getElementById('score-today');
+            const monthScoreInput = document.getElementById('score-month');
+            if (todayScoreInput) todayScoreInput.value = '';
+            if (monthScoreInput) monthScoreInput.value = '';
         }
          
-        // Update table label and placeholder based on game selection
+        // 更新桌號標籤和提示文字
         if (selectedGameValue === 'Thor') {
             tableLabel.innerHTML = '<i class="fas fa-hashtag"></i> 輸入遊戲編碼(請先進遊戲轉一轉看底下的編碼):';
             tableInput.placeholder = '請先進遊戲轉一轉看底下的編碼';
@@ -230,8 +250,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Basic validation
         let isValid = true;
         let missingFields = [];
-        if (!formData.scoreTodayValue) missingFields.push("今日得分率");
-        if (!formData.scoreMonthValue) missingFields.push("30日得分率");
+        
+        // 只有非雷神之槌遊戲才檢查得分率
+        if (selectedGameValue !== 'Thor') {
+            if (!formData.scoreTodayValue) missingFields.push("今日得分率");
+            if (!formData.scoreMonthValue) missingFields.push("30日得分率");
+        }
+        
         if (!formData.table) missingFields.push("桌號");
 
         // Only validate rounds if the input group is visible
@@ -323,8 +348,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // 更新金額顯示為得分率
         const amountElement = document.getElementById('result-amount');
         const amountItem = amountElement.closest('.result-item');
-        amountItem.innerHTML = '<i class="fas fa-chart-bar"></i> 得分率: <span id="result-amount">今日 ' + 
-            (formData.scoreTodayValue || 'N/A') + ' / 30日 ' + (formData.scoreMonthValue || 'N/A') + '</span>';
+        
+        // 如果是雷神之槌，隱藏得分率項目
+        if (formData.gameValue === 'Thor') {
+            amountItem.style.display = 'none';
+        } else {
+            // 顯示得分率項目
+            amountItem.style.display = 'block';
+            amountItem.innerHTML = '<i class="fas fa-chart-bar"></i> 得分率: <span id="result-amount">今日 ' + 
+                (formData.scoreTodayValue || 'N/A') + ' / 30日 ' + (formData.scoreMonthValue || 'N/A') + '</span>';
+        }
         
         document.getElementById('result-game').textContent = formData.game;
         
