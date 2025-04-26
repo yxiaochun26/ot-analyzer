@@ -21,8 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameSelect = document.getElementById('game');
     const roundsInputGroup = document.getElementById('rounds-input-group');
     const roundsInput1 = document.getElementById('rounds');
-    const roundsInput2 = document.getElementById('rounds-2');
-    const roundsInput3 = document.getElementById('rounds-3');
+    const roundsInputsContainer = document.getElementById('rounds-inputs-container');
     
     // Table inputs
     const tableLabel = document.getElementById('table-label');
@@ -112,40 +111,27 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateRoundsInputsVisibility() {
         const selectedGameValue = gameSelect.value; // Get 'Zeus', 'Thor', 'Wukong' etc.
 
-        // Check if the selected game is one that needs three rounds inputs
-        const showThreeRounds = ['Zeus', 'Wukong', 'Wuxia', 'RedThreeKingdoms'].includes(selectedGameValue);
-
-        if (showThreeRounds) { // Modified condition
-            roundsInputGroup.style.display = 'block'; // Show the whole group
-            roundsInput1.style.display = 'block';
-            roundsInput2.style.display = 'block';
-            roundsInput3.style.display = 'block';
-        } else if (selectedGameValue === 'Thor') {
+        if (selectedGameValue === 'Thor') {
             roundsInputGroup.style.display = 'none'; // Hide the whole group
         } else {
-            // Default case for any other future games
+            // For all other games, show only one input field
             roundsInputGroup.style.display = 'block'; // Show the group
-            roundsInput1.style.display = 'block';     // Only show the first input
-            roundsInput2.style.display = 'none';
-            roundsInput3.style.display = 'none';
+            roundsInput1.style.display = 'block';     // Show the one input
         }
-         // Clear inputs when hidden or changing game type
-         if (!showThreeRounds) { // Modified condition
-             roundsInput2.value = '';
-             roundsInput3.value = '';
-         }
-         if (selectedGameValue === 'Thor') {
-            roundsInput1.value = '';
-         }
          
-         // Update table label and placeholder based on game selection
-         if (selectedGameValue === 'Thor') {
-             tableLabel.innerHTML = '<i class="fas fa-hashtag"></i> 輸入遊戲編碼(請先進遊戲轉一轉看底下的編碼):';
-             tableInput.placeholder = '請先進遊戲轉一轉看底下的編碼';
-         } else {
-             tableLabel.innerHTML = '<i class="fas fa-hashtag"></i> 輸入桌號:';
-             tableInput.placeholder = '輸入桌號';
-         }
+        // Clear inputs when hiding
+        if (selectedGameValue === 'Thor') {
+            roundsInput1.value = '';
+        }
+         
+        // Update table label and placeholder based on game selection
+        if (selectedGameValue === 'Thor') {
+            tableLabel.innerHTML = '<i class="fas fa-hashtag"></i> 輸入遊戲編碼(請先進遊戲轉一轉看底下的編碼):';
+            tableInput.placeholder = '請先進遊戲轉一轉看底下的編碼';
+        } else {
+            tableLabel.innerHTML = '<i class="fas fa-hashtag"></i> 輸入桌號:';
+            tableInput.placeholder = '輸入桌號';
+        }
     }
 
     // --- Screen Navigation ---
@@ -220,17 +206,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let roundsValue;
         let roundsRaw = [];
 
-        if (selectedGameValue === 'Zeus') {
-            const r1 = roundsInput1.value.trim();
-            const r2 = roundsInput2.value.trim();
-            const r3 = roundsInput3.value.trim();
-            roundsRaw = [r1, r2, r3];
-            roundsValue = roundsRaw.filter(r => r !== '').join(', ');
-            if (roundsValue === '') roundsValue = 'N/A'; // Display N/A if all are empty
-        } else if (selectedGameValue === 'Thor') {
+        if (selectedGameValue === 'Thor') {
             roundsValue = 'N/A'; // Not applicable for Thor
         } else {
-            // Default: collect only the first value
+            // For all other games, just collect the single value
             const r1 = roundsInput1.value.trim();
             roundsRaw = [r1];
             roundsValue = r1 !== '' ? r1 : 'N/A';
@@ -254,11 +233,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Only validate rounds if the input group is visible
         if (roundsInputGroup.style.display !== 'none') {
-             if (selectedGameValue === 'Zeus' && roundsRaw.every(r => r === '')) {
-                 missingFields.push("未開轉數 (至少一個)");
-             } else if (selectedGameValue !== 'Zeus' && selectedGameValue !== 'Thor' && roundsRaw[0] === '') {
-                  missingFields.push("未開轉數");
-             }
+            if (selectedGameValue !== 'Thor' && roundsRaw[0] === '') {
+                missingFields.push("未開轉數");
+            }
         }
 
         if (missingFields.length > 0) {
