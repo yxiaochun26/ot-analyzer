@@ -440,12 +440,30 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const dataRangeParent = dataRangeElement.parentElement;
         
-        // 改為更安全的選擇器 - :has() 選擇器可能不被所有瀏覽器支持
-        let disableRotationItem = document.querySelector('.result-item:has(.success)');
+        // 直接通過索引找到解除空轉元素（假設它是第8個result-item）
+        // 這比使用:has選擇器更可靠
+        const resultItems = document.querySelectorAll('.result-item');
+        let disableRotationItem = null;
+        
+        // 遍歷所有result-item元素，尋找包含"解除空轉"文本的元素
+        for (let i = 0; i < resultItems.length; i++) {
+            if (resultItems[i].textContent.includes('解除空轉')) {
+                disableRotationItem = resultItems[i];
+                console.log('找到解除空轉元素:', disableRotationItem);
+                break;
+            }
+        }
+        
+        // 如果還是找不到，使用一個保守的備用方法
         if (!disableRotationItem) {
-            // 備用選擇器
-            disableRotationItem = document.querySelector('.result-item');
-            console.warn('無法找到帶有 .success 的元素，使用備用選擇器');
+            console.warn('無法找到解除空轉元素，嘗試使用其他方法');
+            // 嘗試獲取第8個元素（假設解除空轉通常是第8個result-item）
+            if (resultItems.length >= 8) {
+                disableRotationItem = resultItems[7]; // 索引從0開始，所以第8個是索引7
+            } else if (resultItems.length > 0) {
+                // 如果連8個元素都沒有，使用最後一個元素
+                disableRotationItem = resultItems[resultItems.length - 1];
+            }
         }
         
         // 決定顯示爆分率還是訊息
@@ -480,10 +498,28 @@ document.addEventListener('DOMContentLoaded', () => {
             // 修改解除空轉的顯示
             try {
                 if (disableRotationItem) {
+                    // 記錄更新前的狀態，便於調試
+                    console.log('更新前的解除空轉元素內容:', disableRotationItem.innerHTML);
+                    console.log('訊息是否為故障訊息:', isFailureMessage, '選中的訊息:', selectedMessage);
+                    
+                    // 創建新的HTML內容而不是直接修改innerHTML，確保一致性
+                    let newRotationHTML = '';
                     if (isFailureMessage) {
-                        disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="failure" style="color: red;">失敗</span>';
+                        newRotationHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="failure" style="color: red;">失敗</span>';
                     } else {
-                        disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="success">完成</span>';
+                        newRotationHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="success">完成</span>';
+                    }
+                    
+                    // 更新元素內容
+                    disableRotationItem.innerHTML = newRotationHTML;
+                    console.log('更新後的解除空轉元素內容:', disableRotationItem.innerHTML);
+                    
+                    // 再次確認狀態是否如預期
+                    const statusElement = disableRotationItem.querySelector('.failure, .success');
+                    if (statusElement) {
+                        console.log('解除空轉最終狀態:', statusElement.textContent, 
+                            '類別:', statusElement.className, 
+                            '與預期一致:', (isFailureMessage ? statusElement.classList.contains('failure') : statusElement.classList.contains('success')));
                     }
                 }
             } catch (error) {
