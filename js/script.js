@@ -410,6 +410,12 @@ document.addEventListener('DOMContentLoaded', () => {
             "系統計算人數超載  請更換遊戲嘗試....",
             "資料讀取失敗... 請在重試"
         ];
+        
+        // 需要隱藏圖標的訊息列表（包括故障訊息和其他特定訊息）
+        const hideIconsMessages = [
+            ...failureMessages,
+            "此房不適合參考訊號購買, 平轉即可"
+        ];
 
         // 首先找到相關元素
         const dataRangeElement = document.getElementById('result-data-range');
@@ -437,24 +443,25 @@ document.addEventListener('DOMContentLoaded', () => {
             // 保留"爆分率:"標籤，只替換值的部分
             dataRangeParent.innerHTML = '<i class="fas fa-database"></i> 爆分率: <span id="result-data-range" class="highlight">' + selectedMessage + '</span>';
             
-            // 判斷是否為失敗訊息
+            // 判斷是否為失敗訊息和是否需要隱藏圖標
             const isFailureMessage = failureMessages.includes(selectedMessage);
+            const shouldHideIcons = hideIconsMessages.includes(selectedMessage);
             
             // 修改解除空轉的顯示
             if (isFailureMessage) {
                 disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="failure" style="color: red;">失敗</span>';
-                
-                // 當出現故障訊息時，隱藏購買建議圖標區域
-                const purchaseIconsSection = document.querySelector('.purchase-section');
-                if (purchaseIconsSection) {
-                    purchaseIconsSection.style.display = 'none';
-                }
             } else {
                 disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="success">完成</span>';
-                
-                // 確保購買建議圖標區域顯示（可能在之前被隱藏）
-                const purchaseIconsSection = document.querySelector('.purchase-section');
-                if (purchaseIconsSection) {
+            }
+            
+            // 根據訊息控制購買建議圖標區域的顯示/隱藏
+            const purchaseIconsSection = document.querySelector('.purchase-section');
+            if (purchaseIconsSection) {
+                if (shouldHideIcons) {
+                    // 當出現任何需要隱藏圖標的訊息時，隱藏購買建議圖標區域
+                    purchaseIconsSection.style.display = 'none';
+                } else {
+                    // 其他情況下顯示購買建議圖標區域
                     purchaseIconsSection.style.display = 'block';
                 }
             }
