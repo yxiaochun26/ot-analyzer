@@ -475,7 +475,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // 決定顯示爆分率還是訊息
-        if (Math.random() < 0.2) {
+        if (Math.random() < 0.3) {
             // 顯示爆分率 (70-97%)
             const explosionRate = getRandomInt(70, 97);
             dataRangeParent.innerHTML = '<i class="fas fa-database"></i> 爆分率: <span id="result-data-range" class="highlight">' + `${explosionRate}%` + '</span>';
