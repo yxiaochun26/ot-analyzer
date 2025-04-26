@@ -43,8 +43,17 @@
                     </select>
                 </div>
                 <div class="input-group">
-                    <label for="amount"><i class="fas fa-dollar-sign"></i> 設定金額:</label>
-                    <input type="number" id="amount" placeholder="輸入金額">
+                    <label><i class="fas fa-chart-bar"></i> 得分率:</label>
+                    <div style="display: flex; gap: 10px;">
+                        <div style="flex: 1;">
+                            <label for="score-today" style="font-size: 0.9em;">今日:</label>
+                            <input type="number" id="score-today" placeholder="今日得分率">
+                        </div>
+                        <div style="flex: 1;">
+                            <label for="score-month" style="font-size: 0.9em;">30日:</label>
+                            <input type="number" id="score-month" placeholder="30日得分率">
+                        </div>
+                    </div>
                 </div>
                 <div class="input-group">
                     <label for="game"><i class="fas fa-gamepad"></i> 遊戲選項:</label>

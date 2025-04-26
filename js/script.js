@@ -215,21 +215,21 @@ document.addEventListener('DOMContentLoaded', () => {
             roundsValue = r1 !== '' ? r1 : 'N/A';
         }
 
+        // 獲取所有表單數據
         const formData = {
-            device: document.getElementById('device').value,
-            platform: document.getElementById('platform').selectedOptions[0].text,
-            amount: document.getElementById('amount').value,
-            game: document.getElementById('game').selectedOptions[0].text, // Game Text for display
-            gameValue: selectedGameValue, // Game Value for logic
-            rounds: roundsValue, // Formatted string for display
-            table: document.getElementById('table').value,
+            gameValue: document.getElementById('game').value,
+            roomValue: document.getElementById('room').value,
+            scoreTodayValue: document.getElementById('score-today').value,
+            scoreMonthValue: document.getElementById('score-month').value,
+            continuousValue: document.getElementById('continuous').value
         };
 
         // Basic validation
         let isValid = true;
         let missingFields = [];
-        if (!formData.amount) missingFields.push("金額");
-        if (!formData.table) missingFields.push("桌號");
+        if (!formData.scoreTodayValue) missingFields.push("今日得分率");
+        if (!formData.scoreMonthValue) missingFields.push("30日得分率");
+        if (!formData.roomValue) missingFields.push("桌號");
 
         // Only validate rounds if the input group is visible
         if (roundsInputGroup.style.display !== 'none') {
