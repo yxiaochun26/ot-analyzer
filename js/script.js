@@ -331,7 +331,61 @@ document.addEventListener('DOMContentLoaded', () => {
             tableItem.innerHTML = '<i class="fas fa-hashtag"></i> 設定桌號: <span id="result-table">' + (formData.table || 'N/A') + '</span>';
         }
         
-        document.getElementById('result-data-range').textContent = `${getRandomInt(95, 114)}%`;
+        // 隨機生成爆分率，範圍在70-97%之間
+        const explosionRate = getRandomInt(70, 97);
+        document.getElementById('result-data-range').textContent = `${explosionRate}%`;
+
+        // 可能的結果訊息列表
+        const resultMessages = [
+            "很抱歉... 此房計算不出參考值建議換房",
+            "此房不適合參考訊號購買, 平轉即可",
+            "資料讀取失敗... 請在重試",
+            "平轉(紅球100倍未消), 可購買",
+            "平轉遇(綠球2顆未消),可購買",
+            "平轉遇(綠球3顆未消),可購買",
+            "平轉(紅球100倍未消), 過兩轉後可購買",
+            "平轉(紅球100倍未消), 過四轉後可購買",
+            "平轉(紅球100倍未消), 過九轉後可購買",
+            "平轉(紅球100倍未消), 過十九轉後可購買",
+            "平轉遇(藍球1顆未消),可購買",
+            "此房高機率獲取JP,建議自動轉盯盤",
+            "階梯式打法,10塊(25轉)20塊(25轉),方可固定金額平轉",
+            "系統計算人數超載  請更換遊戲嘗試....",
+            "此房建議短打 上限99轉內即可換房"
+        ];
+
+        // 故障訊息列表（會導致失敗顯示）
+        const failureMessages = [
+            "很抱歉... 此房計算不出參考值建議換房",
+            "系統計算人數超載  請更換遊戲嘗試....",
+            "資料讀取失敗... 請在重試"
+        ];
+
+        // 隨機選擇一條訊息
+        const randomMessageIndex = Math.floor(Math.random() * resultMessages.length);
+        const selectedMessage = resultMessages[randomMessageIndex];
+
+        // 添加訊息到結果頁面
+        const messageElement = document.createElement('div');
+        messageElement.className = 'result-item';
+        messageElement.innerHTML = `<i class="fas fa-comment"></i> 分析結果: <span class="message">${selectedMessage}</span>`;
+        
+        // 找到解除空轉元素的位置
+        const disableRotationItem = document.querySelector('.result-item:has(.success)');
+        
+        // 判斷是否為失敗訊息
+        const isFailureMessage = failureMessages.includes(selectedMessage);
+        
+        // 修改解除空轉的顯示
+        if (isFailureMessage) {
+            disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="failure" style="color: red;">失敗</span>';
+        } else {
+            disableRotationItem.innerHTML = '<i class="fas fa-check-circle"></i> 解除空轉: <span class="success">完成</span>';
+        }
+        
+        // 在爆分率前插入訊息
+        const dataRangeItem = document.querySelector('.result-item:has(#result-data-range)');
+        dataRangeItem.parentNode.insertBefore(messageElement, dataRangeItem);
 
         // Display rounds based on collected data
         const resultRoundsElement = document.getElementById('result-rounds');
