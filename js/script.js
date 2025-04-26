@@ -470,6 +470,10 @@ document.addEventListener('DOMContentLoaded', () => {
             dataRangeParent.innerHTML = '<i class="fas fa-database"></i> 爆分率: <span id="result-data-range" class="highlight">' + selectedMessage + '</span>';
             
             // 判斷是否為失敗訊息和是否需要隱藏圖標
+            console.log('選中的訊息:', selectedMessage);
+            console.log('故障訊息列表:', failureMessages);
+            console.log('該訊息是否為故障訊息:', failureMessages.includes(selectedMessage));
+            
             const isFailureMessage = failureMessages.includes(selectedMessage);
             const shouldHideIcons = hideIconsMessages.includes(selectedMessage);
             
