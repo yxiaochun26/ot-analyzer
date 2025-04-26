@@ -713,6 +713,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 iconData.img.src = `img/${filename}`;
                 iconData.img.alt = filename.split('.')[0].replace(/[-_]/g, ' ');
 
+                // 添加圖片錯誤處理
+                iconData.img.onerror = function() {
+                    console.warn(`圖片載入失敗: img/${filename}`);
+                    this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwIiB5PSI1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBhbGlnbm1lbnQtYmFzZWxpbmU9Im1pZGRsZSIgZmlsbD0iIzk5OSI+圖片缺失</dGV4dD48L3N2Zz4=';
+                };
+
                 let quantity;
                 if (specificQuantityRules[filename]) {
                     const rule = specificQuantityRules[filename];
