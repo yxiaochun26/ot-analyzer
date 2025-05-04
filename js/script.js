@@ -132,9 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const scoreRateGroup = document.querySelector('.input-group:has([id^="score-"])');
         
         // 更新轉數輸入區域顯示
-        if (selectedGameValue === 'Thor') {
+        if (selectedGameValue === 'Thor' || selectedGameValue === 'Thor2') {
             roundsInputGroup.style.display = 'none'; // 隱藏轉數組
-            
             // 同時隱藏得分率輸入框
             if (scoreRateGroup) {
                 scoreRateGroup.style.display = 'none';
