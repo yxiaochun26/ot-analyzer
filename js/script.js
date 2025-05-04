@@ -161,9 +161,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
          
         // 更新桌號標籤和提示文字
-        if (selectedGameValue === 'Thor') {
-            tableLabel.innerHTML = '<i class="fas fa-hashtag"></i> 輸入遊戲編碼末5碼(請先至雷神一轉後查看底下編碼):';
-            tableInput.placeholder = '請先至雷神一轉後查看底下編碼';
+        if (selectedGameValue === 'Thor' || selectedGameValue === 'Thor2') {
+            if (selectedGameValue === 'Thor2') {
+                tableLabel.innerHTML = '<i class="fas fa-hashtag"></i> 輸入遊戲編碼末5碼(請先一轉後查看底左下編碼):';
+                tableInput.placeholder = '請先一轉後查看底左下編碼';
+            } else {
+                tableLabel.innerHTML = '<i class="fas fa-hashtag"></i> 輸入遊戲編碼末5碼(請先至雷神一轉後查看底下編碼):';
+                tableInput.placeholder = '請先至雷神一轉後查看底下編碼';
+            }
         } else {
             tableLabel.innerHTML = '<i class="fas fa-hashtag"></i> 輸入桌號:';
             tableInput.placeholder = '輸入桌號';
