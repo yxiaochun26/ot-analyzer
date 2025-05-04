@@ -735,6 +735,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         showScreen('result');
+
+        // 在爆分率區塊下方新增提示語
+        let tipElement = document.getElementById('result-save-tip');
+        if (!tipElement) {
+            tipElement = document.createElement('div');
+            tipElement.id = 'result-save-tip';
+            tipElement.style.color = '#ff69b4';
+            tipElement.style.textAlign = 'center';
+            tipElement.style.marginTop = '16px';
+            tipElement.style.fontWeight = 'bold';
+            tipElement.textContent = '請截圖此畫面保存避免權益損失';
+            dataRangeParent.parentElement.appendChild(tipElement);
+        }
     }
 
     // --- Back to Main Screen ---
