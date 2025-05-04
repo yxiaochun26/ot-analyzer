@@ -272,8 +272,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let isValid = true;
         let missingFields = [];
         
-        // 只有非雷神之槌遊戲才檢查得分率
-        if (selectedGameValue !== 'Thor') {
+        // 只有非雷神之槌和RK電子雷神II遊戲才檢查得分率
+        if (selectedGameValue !== 'Thor' && selectedGameValue !== 'Thor2') {
             if (!formData.scoreTodayValue) missingFields.push("今日得分率");
             if (!formData.scoreMonthValue) missingFields.push("30日得分率");
         }
