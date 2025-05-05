@@ -752,7 +752,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Back to Main Screen ---
     backToMainButton.addEventListener('click', () => {
-        showScreen('main');
+        showScreen('serial'); // 直接回到序號輸入首頁
         // 重置表單字段
         document.getElementById('score-today').value = '';
         document.getElementById('score-month').value = '';
