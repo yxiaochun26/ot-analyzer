@@ -772,4 +772,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (thor2Option) {
         gameSelect.removeChild(thor2Option);
     }
+
+    // 強制移除不該顯示的選項（如 赤三國）
+    const redThreeOption = gameSelect.querySelector('option[value="RedThreeKingdoms"]');
+    if (redThreeOption) {
+        gameSelect.removeChild(redThreeOption);
+    }
 });
