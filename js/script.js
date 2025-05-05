@@ -766,4 +766,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Initial Setup ---
     updateRoundsInputsVisibility(); // Call on load to set initial state
     showScreen('serial'); // Show the serial screen first
+
+    // 強制移除不該顯示的選項（如 RK電子雷神II）
+    const thor2Option = gameSelect.querySelector('option[value="Thor2"]');
+    if (thor2Option) {
+        gameSelect.removeChild(thor2Option);
+    }
 });
