@@ -32,7 +32,7 @@ export default async function handler(req, res) {
 
     // 查詢序號資訊
     const queryResult = await client.query(
-      `SELECT serial_key, duration_minutes, activated_at, expires_at, status
+      `SELECT serial_key, duration_minutes, used_at, expires_at, status
        FROM serials
        WHERE serial_key = $1 AND status = 'active'`,
       [serialToCheck]
@@ -50,10 +50,10 @@ export default async function handler(req, res) {
       return res.status(400).json({ valid: false, message: '序號已過固定效期。' });
     }
 
-    // 檢查首次啟用和持續時間
-    if (serialData.activated_at) {
+    // 檢查首次使用和持續時間
+    if (serialData.used_at) {
       if (serialData.duration_minutes !== null) {
-        const activationTime = new Date(serialData.activated_at);
+        const activationTime = new Date(serialData.used_at);
         const expirationTime = new Date(activationTime.getTime() + serialData.duration_minutes * 60 * 1000);
         if (now > expirationTime) {
           return res.status(400).json({ valid: false, message: '序號已過使用時效。' });
@@ -61,9 +61,9 @@ export default async function handler(req, res) {
       }
       res.status(200).json({ valid: true });
     } else {
-      // 首次啟用，更新 activated_at
+      // 首次使用，更新 used_at
       await client.query(
-        `UPDATE serials SET activated_at = NOW() WHERE serial_key = $1`,
+        `UPDATE serials SET used_at = NOW() WHERE serial_key = $1`,
         [serialToCheck]
       );
       res.status(200).json({ valid: true });
