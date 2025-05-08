@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ serial: serial })
+                body: JSON.stringify({ code: serial })
             });
 
             // 解析後端回傳的 JSON 結果
