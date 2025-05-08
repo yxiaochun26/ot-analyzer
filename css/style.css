@@ -1,23 +1,22 @@
 /* css/style.css */
 :root {
-    --background-color: #0a0a0a;
-    --panel-bg-color: rgba(15, 15, 15, 0.85);
-    --text-color: #00ffcc; /* Neon cyan/teal */
-    --primary-color: #00ffcc;
-    --secondary-color: #ff00ff; /* Neon magenta */
-    --highlight-color: #ffff00; /* Neon yellow */
-    --error-color: #ff4136; /* Neon red */
-    --border-color: rgba(0, 255, 204, 0.5);
-    --input-bg-color: rgba(0, 0, 0, 0.7);
-    --button-bg-color: transparent;
-    --button-hover-bg: rgba(0, 255, 204, 0.2);
-
-    --font-primary: 'Orbitron', sans-serif; /* Futuristic font */
-    --font-secondary: 'Roboto Mono', monospace; /* Monospaced font for code/data */
+    --background-color: #0a192f;
+    --panel-bg-color: rgba(20, 30, 50, 0.98);
+    --text-color: #f8f8f2;
+    --primary-color: #00eaff;
+    --secondary-color: #a259ff;
+    --highlight-color: #00eaff;
+    --error-color: #ff3860;
+    --border-color: #00eaff;
+    --input-bg-color: #112240;
+    --button-bg-color: linear-gradient(90deg, #00eaff 0%, #a259ff 100%);
+    --button-hover-bg: linear-gradient(90deg, #a259ff 0%, #00eaff 100%);
+    --font-primary: 'Fira Mono', 'Roboto Mono', 'Consolas', monospace;
+    --font-secondary: 'Fira Mono', 'Roboto Mono', 'Consolas', monospace;
 }
 
 body {
-    background-color: var(--background-color);
+    background: var(--background-color);
     color: var(--text-color);
     font-family: var(--font-secondary);
     margin: 0;
@@ -38,6 +37,10 @@ body {
     max-width: 450px; /* Adjust width as needed */
     padding: 20px;
     position: relative; /* Needed for screen positioning */
+    background: var(--panel-bg-color);
+    border-radius: 14px;
+    box-shadow: 0 0 32px #00eaff44;
+    border: 2px solid var(--border-color);
 }
 
 .screen {
@@ -82,7 +85,6 @@ body {
     margin-right: 10px;
 }
 
-
 .panel p {
     text-align: center;
     margin-bottom: 20px;
@@ -106,7 +108,6 @@ body {
     width: 15px; /* Align icons */
     text-align: center;
 }
-
 
 .input-group input[type="text"],
 .input-group input[type="number"],
@@ -144,7 +145,6 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
 }
-
 
 button {
     width: 100%;
@@ -219,7 +219,6 @@ button:hover {
     margin-top: 15px;
 }
 
-
 /* Result Screen Specific Styles */
 .result-item {
     margin-bottom: 15px;
@@ -259,7 +258,6 @@ button:hover {
      text-shadow: 0 0 8px var(--highlight-color);
 }
 
-
 .purchase-section {
     margin-top: 25px;
     padding-top: 20px;
@@ -296,4 +294,91 @@ button:hover {
 
 #back-to-main {
     margin-top: 25px;
+}
+
+@keyframes flicker {
+    0%, 100% { opacity: 1; }
+    45% { opacity: 0.7; }
+    55% { opacity: 0.4; }
+    60% { opacity: 0.9; }
+}
+h1, h2 {
+    animation: flicker 2.5s infinite alternate;
+}
+
+/* --- 全新駭客風主題 --- */
+:root {
+    --background-color: #0a192f;
+    --panel-bg-color: rgba(20, 30, 50, 0.98);
+    --text-color: #f8f8f2;
+    --primary-color: #00eaff;
+    --secondary-color: #a259ff;
+    --highlight-color: #00eaff;
+    --error-color: #ff3860;
+    --border-color: #00eaff;
+    --input-bg-color: #112240;
+    --button-bg-color: linear-gradient(90deg, #00eaff 0%, #a259ff 100%);
+    --button-hover-bg: linear-gradient(90deg, #a259ff 0%, #00eaff 100%);
+    --font-primary: 'Fira Mono', 'Roboto Mono', 'Consolas', monospace;
+    --font-secondary: 'Fira Mono', 'Roboto Mono', 'Consolas', monospace;
+}
+
+body {
+  background: var(--background-color);
+  color: var(--text-color);
+  font-family: var(--font-secondary);
+}
+
+.container, .panel {
+  background: var(--panel-bg-color);
+  border-radius: 14px;
+  box-shadow: 0 0 32px #00eaff44;
+  border: 2px solid var(--border-color);
+}
+
+h1, h2, h3 {
+  color: var(--primary-color);
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px var(--secondary-color);
+}
+
+button {
+  background: var(--button-bg-color);
+  color: #0a192f;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  box-shadow: 0 0 12px #00eaff88;
+  padding: 10px 24px;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+button:hover {
+  background: var(--button-hover-bg);
+  color: #fff;
+  box-shadow: 0 0 24px var(--secondary-color);
+}
+
+input, select {
+  background: var(--input-bg-color);
+  color: var(--primary-color);
+  border: 1.5px solid var(--secondary-color);
+  border-radius: 5px;
+  padding: 6px 10px;
+  margin-bottom: 8px;
+}
+
+.error-message {
+  color: var(--error-color);
+  font-weight: bold;
+  text-shadow: 0 0 4px var(--secondary-color);
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  45% { opacity: 0.7; }
+  55% { opacity: 0.4; }
+  60% { opacity: 0.9; }
+}
+h1, h2 {
+  animation: flicker 2.5s infinite alternate;
 } 
